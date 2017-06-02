@@ -83,7 +83,7 @@ public abstract class AbstractGA {
 				
 				bestChromosome = (Chromosome)incumbentChromosome.clone();
 				bestFitness = incumbentFitness;
-				
+				k = 0;
 				if (verbose) {
 					System.out.println("Best Sol = " + decode(bestChromosome));
 				}
