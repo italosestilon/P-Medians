@@ -64,21 +64,11 @@ public class PMedian implements Evaluator {
 		
 		dist = new Integer[nodes][nodes];
 		
-		for (int i = 0; i < nodes; ++i) {
-			stok.nextToken();
-			X[i] = (int)stok.nval;
-			stok.nextToken();
-			Y[i] = (int)stok.nval;
-		}
-		
 		for (int i = 0; i < nodes; ++i) { // otbém a distância entre os nodes
-			for(int j = i+1; j < nodes; ++j) {
-				double hypot = (double)Math.hypot(X[i]-X[j], Y[i]-Y[j]);
-				int distance = (int)Math.floor(hypot+0.5);
-				dist[i][j] = distance;
-				dist[j][i] = distance;
+			for (int j = 0; j < nodes; ++j) {
+				stok.nextToken();
+				dist[i][j] = (int) stok.nval;
 			}
-			dist[i][i] = 0;
 		}
 	}
 
