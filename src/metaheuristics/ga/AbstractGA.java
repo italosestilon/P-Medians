@@ -1,8 +1,6 @@
 package metaheuristics.ga;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Random;
+import java.util.*;
 
 import problems.Evaluator;
 import solutions.Solution;
@@ -148,25 +146,77 @@ public abstract class AbstractGA {
 			Chromosome parent2 = parents.get(i + 1);
 
 			int crosspoint = rng.nextInt(chromosomeSize + 1);
+			int crosspoint2 = rng.nextInt(chromosomeSize + 1);
+
+			if(crosspoint > crosspoint2){
+				int aux;
+				aux = crosspoint2;
+				crosspoint2 = crosspoint;
+				crosspoint = aux;
+			}
 
 			Chromosome offspring1 = new Chromosome();
 			Chromosome offspring2 = new Chromosome();
 
-			for (int j = 0; j < chromosomeSize; j++) {
-				if (j >= crosspoint) {
-					offspring1.set(j, parent2.get(j));
-					offspring2.set(j, parent1.get(j));
-				} else {
-					offspring1.set(j, parent1.get(j));
-					offspring2.set(j, parent2.get(j));
-				}
+			int medians1 = 0;
+			int medians2 = 0;
+
+			for (int j = crosspoint; j <= crosspoint2; j++) {
+				boolean value = parent1.get(j);
+
+				if(value) medians1++;
+				offspring1.set(j, value);
+
+				value = parent2.get(j);
+				if(value) medians2++;
+
+				offspring2.set(j, value);
+
 			}
-			
+
+			getSchemaFromTheSecondParent(parent2, crosspoint, crosspoint2, offspring1, medians1);
+			getSchemaFromTheSecondParent(parent1, crosspoint, crosspoint2, offspring2, medians2);
+
 			offsprings.add(offspring1);
 			offsprings.add(offspring2);
 		}
 
 		return offsprings;
+	}
+
+	private void getSchemaFromTheSecondParent(Chromosome parent2, int crosspoint, int crosspoint2, Chromosome offspring1, int medians1) {
+		List<Integer> l1 = remainsMedians(parent2, crosspoint, crosspoint2);
+
+		for(int k = 0;  offspring1.cardinality() < objFunction.getNumberOfMedians() && k < l1.size(); k++){
+            offspring1.set(l1.get(k));
+        }
+
+
+		for(int k = crosspoint; k <= crosspoint2 && offspring1.cardinality() < objFunction.getNumberOfMedians(); k++){
+			boolean value = parent2.get(k);
+
+			if(value){
+				offspring1.set(k);
+			}
+		}
+
+	}
+
+	private ArrayList<Integer> remainsMedians(Chromosome parent1, int crosspoint, int crosspoint2) {
+		ArrayList<Integer> l1 = new ArrayList<>();
+		for(int k = 0; k < crosspoint; k++){
+            if(parent1.get(k)){
+                l1.add(k);
+            }
+        }
+
+		for(int k = crosspoint2+1; k < chromosomeSize; k++){
+            if(parent1.get(k)){
+                l1.add(k);
+            }
+        }
+        Collections.shuffle(l1);
+        return l1;
 	}
 
 	protected Population mutate(Population offsprings) {

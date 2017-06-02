@@ -150,13 +150,12 @@ public class GA_PMedian extends AbstractGA {
 	
 	public static void main(String[] args) throws IOException {
 
-		String filename = "instances/instance8.pmp";
+		String filename = "instances/instance2.pmp";
 		int factor = 5;
 		double rate = 0.2;
 		long limitTime = 30*60*1000;
-		
-		long startTime = System.currentTimeMillis();
 		GA_PMedian ga = new GA_PMedian(10000, factor, rate, filename, limitTime);
+		long startTime = System.currentTimeMillis();
 		Solution bestSol = ga.solve();
 		System.out.println("Min Cost = " + bestSol);
 		long endTime = System.currentTimeMillis();
