@@ -128,20 +128,31 @@ public class GA_PMedian extends AbstractGA {
 	
 	protected Population initializeLatinHypercubePopulation() {
 
-		ArrayList<Boolean> col = new ArrayList<Boolean>();
-		Population population = new Population();
+		Integer n = objFunction.getDomainSize();
+		Integer p = objFunction.getNumberOfMedians();
 		
-		for (int i = 0; i < popSize; ++i) {
-			population.add(new Chromosome());
-			boolean valeu = (i%2) == 1;
-			col.add(new Boolean(valeu));
+		Population population = new Population();
+	
+		Integer[][] M = new Integer[popSize][p];
+		
+		int value = 0;
+		
+		for (int j = 0; j < p; ++j) {
+			for (int i = 0; i < popSize; ++i) {	
+				M[i][j] = new Integer(value);
+				value = (value+1)%n; 
+			}
 		}
 		
-		for (int i = 0; i < chromosomeSize; ++i) {
-			Collections.shuffle(col, rng);
-			for (int j = 0; j < popSize; ++j) {
-				boolean value = col.get(j);
-				population.get(j).set(i, value);				
+		for (int i = 0; i < popSize; ++i) {
+			population.add(new Chromosome());				
+		}
+		
+		for (int i = 0; i < popSize; ++i) {
+			for (int j = 0; j < p; ++j) {
+				int index = M[i][j];
+				Chromosome c = population.get(i);
+				c.set(index);				
 			}
 		}
 		
