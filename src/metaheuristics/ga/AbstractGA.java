@@ -174,8 +174,8 @@ public abstract class AbstractGA {
 
 			}
 
-			getSchemaFromTheSecondParent(parent2, crosspoint, crosspoint2, offspring1, medians1);
-			getSchemaFromTheSecondParent(parent1, crosspoint, crosspoint2, offspring2, medians2);
+			getSchemaFromTheSecondParent(parent2, crosspoint, crosspoint2, offspring1);
+			getSchemaFromTheSecondParent(parent1, crosspoint, crosspoint2, offspring2);
 
 			offsprings.add(offspring1);
 			offsprings.add(offspring2);
@@ -184,21 +184,26 @@ public abstract class AbstractGA {
 		return offsprings;
 	}
 
-	private void getSchemaFromTheSecondParent(Chromosome parent2, int crosspoint, int crosspoint2, Chromosome offspring1, int medians1) {
+	private void getSchemaFromTheSecondParent(Chromosome parent2, int crosspoint, int crosspoint2, Chromosome offspring1) {
 		List<Integer> l1 = remainsMedians(parent2, crosspoint, crosspoint2);
 
 		for(int k = 0;  offspring1.cardinality() < objFunction.getNumberOfMedians() && k < l1.size(); k++){
             offspring1.set(l1.get(k));
         }
 
+        l1 = new ArrayList<>();
 
 		for(int k = crosspoint; k <= crosspoint2 && offspring1.cardinality() < objFunction.getNumberOfMedians(); k++){
-			boolean value = parent2.get(k);
-
-			if(value){
-				offspring1.set(k);
-			}
+            if(parent2.get(k)){
+                l1.add(k);
+            }
 		}
+
+		Collections.shuffle(l1);
+
+        for(int k = 0;  offspring1.cardinality() < objFunction.getNumberOfMedians() && k < l1.size(); k++){
+            offspring1.set(l1.get(k));
+        }
 
 	}
 
